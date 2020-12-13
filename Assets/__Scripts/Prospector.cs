@@ -417,42 +417,6 @@ public class Prospector : MonoBehaviour {
             return (true);
         }
         // If one is Ace and the other King, they are adjacent
-        if (c0.rank == 1 && c1.rank == 13 && inPlay[c0.layoutID]){
-			try {
-		        foreach (CardProspector cX in tableau) {
-					try {
-						if(cX.hiddenBy[0].layoutID == c0.layoutID){
-							inPlay[cX.layoutID] = true;
-						}
-					} catch {
-						print("not blocked");
-					};
-				}
-			} catch {
-				print("not blocked");
-			};
-			return (true);
-		};
-        if (c0.rank == 13 && c1.rank == 1 && inPlay[c0.layoutID]){
-			try {
-		        foreach (CardProspector cX in tableau) {
-					try {
-						if(cX.hiddenBy[0].layoutID == c0.layoutID){
-							inPlay[cX.layoutID] = true;
-						}
-					} catch {
-						print("not blocked");
-					};
-				}
-			} catch {
-				print("not blocked");
-			};
-			return (true);
-		};
-
-        //Otherwise, return false
-        return (false);
-    }
 
     // Handle FloatingScore movement
     void FloatingScoreHandler(eScoreEvent evt)

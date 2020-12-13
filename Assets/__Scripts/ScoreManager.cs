@@ -15,7 +15,8 @@ public class ScoreManager : MonoBehaviour {
     static private ScoreManager S;
 
     static public int SCORE_FROM_PREV_ROUND = 0;
-    static public int HIGH_SCORE = 0;
+    static public int GAME_SCORE = 0;
+    static public int GAME_COUNT = 1;
 
     [Header("Set Dynamically")]
     // Fields to track score info
@@ -35,9 +36,16 @@ public class ScoreManager : MonoBehaviour {
         }
 
         // Check for a high score in PlayerPrefs
-        if (PlayerPrefs.HasKey("ProspectorHighScore"))
+
+        if (PlayerPrefs.HasKey("gameCount"))
         {
-            HIGH_SCORE = PlayerPrefs.GetInt("ProspectorHighScore");
+            GAME_COUNT = PlayerPrefs.GetInt("gameCount");
+			print("EE");
+			print(GAME_COUNT);
+        }
+        if (PlayerPrefs.HasKey("GameScore"))
+        {
+            GAME_SCORE = PlayerPrefs.GetInt("GameScore");
         }
         // Add the score from last round, which will be >0 if it was a win
         score += SCORE_FROM_PREV_ROUND;
@@ -77,29 +85,56 @@ public class ScoreManager : MonoBehaviour {
 				score = score - 1;
                 break;
         }
-
+	
         // This second switch statement handles round wins and losses
         switch (evt)
         {
+			
             case eScoreEvent.gameWin:
                 // If it's a win, add the score to the next round
                 // static fields are NOT reset by SceneManager.LoadScene()
-                SCORE_FROM_PREV_ROUND = score;
-                print("You won this round! Round score: " + score);
+				int a = PlayerPrefs.GetInt("gameCount");
+				int b = PlayerPrefs.GetInt("GameScore");
+				if (a < 9){
+					a += 1;
+					b += score;
+					PlayerPrefs.SetInt("gameCount", a);
+					PlayerPrefs.SetInt("GameScore", b);
+					PlayerPrefs.Save();
+				} else if (a == 9){
+					PlayerPrefs.SetInt("gameCount", 1);
+					PlayerPrefs.SetInt("GameScore", 0);
+					PlayerPrefs.Save();
+				};
                 break;
 
             case eScoreEvent.gameLoss:
                 // If it's a loss, check against the high score
-                if (HIGH_SCORE <= score)
-                {
-                    print("You got the high score! High score: " + score);
-                    HIGH_SCORE = score;
-                    PlayerPrefs.SetInt("ProspectorHighScore", score);
-                }
-                else
-                {
-                    print("Your final score for the game was: " + score);
-                }
+				int c = PlayerPrefs.GetInt("gameCount");
+				int d = PlayerPrefs.GetInt("GameScore");
+				if (c < 9){
+					c += 1;
+					d += score;
+					PlayerPrefs.SetInt("gameCount", c);
+					PlayerPrefs.SetInt("GameScore", d);
+					PlayerPrefs.Save();
+				} else if (c == 9){
+					PlayerPrefs.SetInt("gameCount", 1);
+					PlayerPrefs.SetInt("GameScore", 0);
+					PlayerPrefs.Save();
+				};
+
+
+           //     if (HIGH_SCORE <= score)
+          //      {
+           //         print("You got the high score! High score: " + score);
+              //      HIGH_SCORE = score;
+            //        PlayerPrefs.SetInt("ProspectorHighScore", score);
+              //  }
+         //       else
+       //         {
+      //              print("Your final score for the game was: " + score);
+       //         }
                 break;
 
             default:

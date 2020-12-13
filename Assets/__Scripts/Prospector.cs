@@ -16,9 +16,9 @@ public class Prospector : MonoBehaviour {
     public float yOffset = -2.5f;
     public Vector3 layoutCenter;
     public Vector2 fsPosMid = new Vector2(0.5f, 0.90f);
-    public Vector2 fsPosRun = new Vector2(0.5f, 0.75f);
-    public Vector2 fsPosMid2 = new Vector2(0.4f, 1.0f);
-    public Vector2 fsPosEnd = new Vector2(0.5f, 0.95f);
+    public Vector2 fsPosRun = new Vector2(-4.5f, 0.75f);
+    public Vector2 fsPosMid2 = new Vector2(-30.4f, -31.0f);
+    public Vector2 fsPosEnd = new Vector2(-5.5f, -3.95f);
     public float reloadDelay = 1f; // The delay between rounds
     public Text gameOverText, roundResultText, highScoreText;
 
@@ -48,13 +48,14 @@ public class Prospector : MonoBehaviour {
     {
         // Set up the HighScore UI Text
         GameObject go = GameObject.Find("HighScore");
-        if (go != null)
-        {
-            highScoreText = go.GetComponent<Text>();
-        }
-        int highScore = ScoreManager.HIGH_SCORE;
-        string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
-        go.GetComponent<Text>().text = hScore;
+        GameObject gameScoreText = GameObject.Find("GameScore");
+
+        int tt = ScoreManager.GAME_COUNT;
+		int gs = ScoreManager.GAME_SCORE;
+        string gCount = "Round Number: " + tt;
+        string gScore = "Game Score: " + gs;
+        go.GetComponent<Text>().text = gCount;
+        gameScoreText.GetComponent<Text>().text = gScore;
 
         // Set up the UI Texts that show at the end of the round
         go = GameObject.Find ("GameOver");
@@ -277,7 +278,7 @@ public class Prospector : MonoBehaviour {
                 MoveToTarget(Draw()); // Moves the next drawn card to the target
                 UpdateDrawPile(); // Restacks the drawPile
                 ScoreManager.EVENT(eScoreEvent.draw);
-                FloatingScoreHandler(eScoreEvent.draw);
+               // FloatingScoreHandler(eScoreEvent.draw);
                 break;
 
             case eCardState.tableau:
@@ -304,7 +305,12 @@ public class Prospector : MonoBehaviour {
                //SetTableauFaces(); // Update tableau card face-ups
 			   
                 ScoreManager.EVENT(eScoreEvent.mine);
-                FloatingScoreHandler(eScoreEvent.mine);
+				
+				GameObject gameScoreText = GameObject.Find("Scoreboard");
+				gameScoreText.GetComponent<Text>().text = "" + ScoreManager.SCORE;
+
+				 
+                //FloatingScoreHandler(eScoreEvent.mine);
 				
 				
 				
@@ -350,27 +356,37 @@ public class Prospector : MonoBehaviour {
     void GameOver(bool won)
     {
         int score = ScoreManager.SCORE;
-        if (fsRun != null) score += fsRun.score;
+		int gScore = ScoreManager.GAME_SCORE;
+     //   if (fsRun != null) score += fsRun.score;
         if (won)
         {
-            gameOverText.text = "Round Over";
-            roundResultText.text = "You won this round!\nRound Score: " + score;
+            if(ScoreManager.GAME_COUNT == 9)
+            {
+				gameOverText.text = "Game Over!";
+                string str = "Your finished this round with a score of: " + score + " and a final score of: " + gScore;
+                roundResultText.text = str;
+            }
+            else if(ScoreManager.GAME_COUNT < 9)
+            {
+				gameOverText.text = "Round Over!";
+                roundResultText.text = "Your finished the round with a score of: " + score;
+            }
             ShowResultsUI(true);
             //print("Game Over. You won! :)");
             ScoreManager.EVENT(eScoreEvent.gameWin);
-            FloatingScoreHandler(eScoreEvent.gameWin);
         }
         else
         {
-            gameOverText.text = "GameOver";
-            if(ScoreManager.HIGH_SCORE <= score)
+            if(ScoreManager.GAME_COUNT == 9)
             {
-                string str = "You got the high score!\nHigh Score: " + score;
+				gameOverText.text = "Game Over!";
+                string str = "Your finished this round with a score of: " + score + " and a final score of: " + gScore;
                 roundResultText.text = str;
             }
-            else
+            else if(ScoreManager.GAME_COUNT < 9)
             {
-                roundResultText.text = "Your final score was: " + score;
+				gameOverText.text = "Round Over!";
+                roundResultText.text = "Your finished the round with a score of: " + score;
             }
             ShowResultsUI(true);
             //print("Game Over. You Lost. :(");
@@ -448,27 +464,17 @@ public class Prospector : MonoBehaviour {
 
             case eScoreEvent.mine: // Remove a mine card
                 // Create a FloatingScore for this score
-                FloatingScore fs;
+         //       FloatingScore fs;
                 // Move it from the mousePosition to fsPosRun
-                Vector2 p0 = Input.mousePosition;
-                p0.x /= Screen.width;
-                p0.y /= Screen.height;
-                fsPts = new List<Vector2>();
-                fsPts.Add(p0);
-                fsPts.Add(fsPosMid);
-                fsPts.Add(fsPosRun);
-                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+            //    Vector2 p0 = Input.mousePosition;
+            //    p0.x /= Screen.width;
+             //   p0.y /= Screen.height;
+              //  fsPts = new List<Vector2>();
+               // fsPts.Add(p0);
+           //     fsPts.Add(fsPosMid);
+             //   fsPts.Add(fsPosRun);
+               // fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
 				Scoreboard.S.score = ScoreManager.SCORE;
-                fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
-                if (fsRun == null)
-                {
-                    fsRun = fs;
-                    fsRun.reportFinishTo = null;
-                }
-                else
-                {
-                    fs.reportFinishTo = fsRun.gameObject;
-                }
                 break;
         }
     }

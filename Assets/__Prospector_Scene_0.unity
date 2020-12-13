@@ -780,6 +780,7 @@ MonoBehaviour:
   tableau: []
   discardPile: []
   fsRun: {fileID: 0}
+  inPlay: 
 --- !u!114 &1382180771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -836,9 +837,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a75d99d1deb73e478934096961c933b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chain: 0
-  scoreRun: 0
-  score: 0
+  chain: -1
+  scoreRun: -1
+  score: 35
 --- !u!1 &1555795406
 GameObject:
   m_ObjectHideFlags: 0
@@ -983,7 +984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabFloatingScore: {fileID: 1888410880404582, guid: 04cf8feb78410ea4891d9127ded834c9,
     type: 3}
-  _score: 0
+  _score: -1
   _scoreString: 
 --- !u!114 &2013692200
 MonoBehaviour:

@@ -10,7 +10,7 @@ public class Scoreboard : MonoBehaviour {
     public GameObject prefabFloatingScore;
 
     [Header("Set Dynamically")]
-    [SerializeField] private int _score = 0;
+    [SerializeField] private int _score = 35;
     [SerializeField] private string _scoreString;
 
     private Transform canvasTrans;
@@ -67,6 +67,7 @@ public class Scoreboard : MonoBehaviour {
     // calling function can do more with it (like set fontSizes, and so on)
     public FloatingScore CreateFloatingScore(int amt, List<Vector2> pts)
     {
+		print(amt);
         GameObject go = Instantiate <GameObject> (prefabFloatingScore);
         go.transform.SetParent(canvasTrans);
         FloatingScore fs = go.GetComponent<FloatingScore>();

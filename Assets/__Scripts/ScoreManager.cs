@@ -19,9 +19,9 @@ public class ScoreManager : MonoBehaviour {
 
     [Header("Set Dynamically")]
     // Fields to track score info
-    public int chain = 0;
-    public int scoreRun = 0;
-    public int score = 0;
+    public int chain = -1;
+    public int scoreRun = -1;
+    public int score = 35;
 
     private void Awake()
     {
@@ -66,14 +66,15 @@ public class ScoreManager : MonoBehaviour {
             case eScoreEvent.draw: // Drawing a card
             case eScoreEvent.gameWin: // Won the round
             case eScoreEvent.gameLoss: // Lost the round
-                chain = 0; // resets the score chain
-                score += scoreRun; // add scoreRun to total score
-                scoreRun = 0; // reset scoreRun
+                //chain = 0; // resets the score chain
+                //score += scoreRun; // add scoreRun to total score
+                //scoreRun = -1; // reset scoreRun
                 break;
 
             case eScoreEvent.mine: // Remove a mine card 
-                chain++; // increase the score chain
-                scoreRun += chain; // add score for this card to run
+               // chain++; // increase the score chain
+                //scoreRun += chain; // add score for this card to run
+				score = score - 1;
                 break;
         }
 

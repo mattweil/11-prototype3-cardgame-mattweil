@@ -17,7 +17,7 @@ public class FloatingScore : MonoBehaviour {
     public eFSState state = eFSState.idle;
 
     [SerializeField]
-    protected int _score = 0;
+    protected int _score = -1;
     public string scoreString;
 
     // The score property sets both _score and scoreString

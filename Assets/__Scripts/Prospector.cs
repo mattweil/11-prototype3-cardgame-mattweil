@@ -31,11 +31,17 @@ public class Prospector : MonoBehaviour {
     public List<CardProspector> tableau;
     public List<CardProspector> discardPile;
     public FloatingScore fsRun;
+	
+	public bool[] inPlay;
+	
 
     private void Awake()
     {
         S = this; // Set up a Singleton for Prospector
         SetUpUITexts();
+		
+		
+		
     }
 
     void SetUpUITexts()
@@ -86,6 +92,15 @@ public class Prospector : MonoBehaviour {
 
         drawPile = ConvertListCardsToListCardProspectors(deck.cards);
         LayoutGame();
+		inPlay = new bool[35];
+		print(inPlay.Length);
+		inPlay[34] = true;
+		inPlay[33] = true;
+		inPlay[32] = true;
+		inPlay[31] = true;
+		inPlay[30] = true;
+		inPlay[29] = true;
+		inPlay[28] = true;
     }
 
     List<CardProspector> ConvertListCardsToListCardProspectors(List<Card> lCD)
@@ -248,6 +263,7 @@ public class Prospector : MonoBehaviour {
     // CardClicked is called any time a card in the game is clicked
     public void CardClicked(CardProspector cd)
     {
+		
         // The reaction is determined by the state of the clicked card
         switch (cd.state)
         {
@@ -275,14 +291,17 @@ public class Prospector : MonoBehaviour {
                 if(!AdjacentRank(cd, target))
                 {
                     // If it's not an adjacent rank, it's not valid
+
                     validMatch = false;
                 }
+
+					
                 if (!validMatch) return; // return if not valid
 
                 // If we got here then it's a valid card
                 tableau.Remove(cd); // Remove it from the tableau List
                 MoveToTarget(cd); // Make it the target card
-                SetTableauFaces(); // Update tableau card face-ups
+               //SetTableauFaces(); // Update tableau card face-ups
                 ScoreManager.EVENT(eScoreEvent.mine);
                 FloatingScoreHandler(eScoreEvent.mine);
                 break;
@@ -368,17 +387,64 @@ public class Prospector : MonoBehaviour {
     // Return true if the two cards are adjacent in rank (A & K wrap around)
     public bool AdjacentRank(CardProspector c0, CardProspector c1)
     {
+		
+		//print(c0.layoutID);
+		//print(inPlay[c0.layoutID]);
+
         // If either card is face-down, it's not adjacent.
         if (!c0.faceUp || !c1.faceUp) return (false);
 
         // If they are 1 apart, they are adjacent
-        if (Mathf.Abs(c0.rank - c1.rank) == 1)
+        if (Mathf.Abs(c0.rank - c1.rank) == 1 && inPlay[c0.layoutID])
         {
+			try {
+		        foreach (CardProspector cX in tableau) {
+					try {
+						if(cX.hiddenBy[0].layoutID == c0.layoutID){
+							inPlay[cX.layoutID] = true;
+						}
+					} catch {
+						print("not blocked");
+					};
+				}
+			} catch {
+				print("not blocked");
+			};
             return (true);
         }
         // If one is Ace and the other King, they are adjacent
-        if (c0.rank == 1 && c1.rank == 13) return (true);
-        if (c0.rank == 13 && c1.rank == 1) return (true);
+        if (c0.rank == 1 && c1.rank == 13 && inPlay[c0.layoutID]){
+			try {
+		        foreach (CardProspector cX in tableau) {
+					try {
+						if(cX.hiddenBy[0].layoutID == c0.layoutID){
+							inPlay[cX.layoutID] = true;
+						}
+					} catch {
+						print("not blocked");
+					};
+				}
+			} catch {
+				print("not blocked");
+			};
+			return (true);
+		};
+        if (c0.rank == 13 && c1.rank == 1 && inPlay[c0.layoutID]){
+			try {
+		        foreach (CardProspector cX in tableau) {
+					try {
+						if(cX.hiddenBy[0].layoutID == c0.layoutID){
+							inPlay[cX.layoutID] = true;
+						}
+					} catch {
+						print("not blocked");
+					};
+				}
+			} catch {
+				print("not blocked");
+			};
+			return (true);
+		};
 
         //Otherwise, return false
         return (false);

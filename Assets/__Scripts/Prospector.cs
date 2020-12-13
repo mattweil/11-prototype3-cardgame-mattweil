@@ -416,7 +416,9 @@ public class Prospector : MonoBehaviour {
 			};
             return (true);
         }
-        // If one is Ace and the other King, they are adjacent
+        //Otherwise, return false
+        return (false);
+    }
 
     // Handle FloatingScore movement
     void FloatingScoreHandler(eScoreEvent evt)

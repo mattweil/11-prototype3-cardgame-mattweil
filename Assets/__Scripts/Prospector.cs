@@ -51,7 +51,13 @@ public class Prospector : MonoBehaviour {
         GameObject gameScoreText = GameObject.Find("GameScore");
 
         int tt = ScoreManager.GAME_COUNT;
-		int gs = ScoreManager.GAME_SCORE;
+		int gs = 0;
+		try {
+			 gs = ScoreManager.GAME_SCORE;
+		} catch {
+			 gs = 0;
+		};
+		
         string gCount = "Round Number: " + tt;
         string gScore = "Game Score: " + gs;
         go.GetComponent<Text>().text = gCount;
@@ -305,7 +311,7 @@ public class Prospector : MonoBehaviour {
                //SetTableauFaces(); // Update tableau card face-ups
 			   
                 ScoreManager.EVENT(eScoreEvent.mine);
-				
+				//ScoreManager.GAME_SCORE += ScoreManager.SCORE;
 				GameObject gameScoreText = GameObject.Find("Scoreboard");
 				gameScoreText.GetComponent<Text>().text = "" + ScoreManager.SCORE;
 
@@ -357,6 +363,7 @@ public class Prospector : MonoBehaviour {
     {
         int score = ScoreManager.SCORE;
 		int gScore = ScoreManager.GAME_SCORE;
+
      //   if (fsRun != null) score += fsRun.score;
         if (won)
         {

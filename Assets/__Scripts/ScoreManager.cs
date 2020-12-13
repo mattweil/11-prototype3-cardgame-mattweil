@@ -15,7 +15,7 @@ public class ScoreManager : MonoBehaviour {
     static private ScoreManager S;
 
     static public int SCORE_FROM_PREV_ROUND = 0;
-    static public int GAME_SCORE = 0;
+    //static public int GAME_SCORE = 0;
     static public int GAME_COUNT = 1;
 
     [Header("Set Dynamically")]
@@ -23,6 +23,7 @@ public class ScoreManager : MonoBehaviour {
     public int chain = -1;
     public int scoreRun = -1;
     public int score = 35;
+	public int gscore = 0;
 
     private void Awake()
     {
@@ -40,12 +41,10 @@ public class ScoreManager : MonoBehaviour {
         if (PlayerPrefs.HasKey("gameCount"))
         {
             GAME_COUNT = PlayerPrefs.GetInt("gameCount");
-			print("EE");
-			print(GAME_COUNT);
         }
         if (PlayerPrefs.HasKey("GameScore"))
         {
-            GAME_SCORE = PlayerPrefs.GetInt("GameScore");
+            gscore = PlayerPrefs.GetInt("GameScore");
         }
         // Add the score from last round, which will be >0 if it was a win
         score += SCORE_FROM_PREV_ROUND;
@@ -93,13 +92,14 @@ public class ScoreManager : MonoBehaviour {
             case eScoreEvent.gameWin:
                 // If it's a win, add the score to the next round
                 // static fields are NOT reset by SceneManager.LoadScene()
+				gscore += score;
 				int a = PlayerPrefs.GetInt("gameCount");
 				int b = PlayerPrefs.GetInt("GameScore");
 				if (a < 9){
 					a += 1;
 					b += score;
 					PlayerPrefs.SetInt("gameCount", a);
-					PlayerPrefs.SetInt("GameScore", b);
+					PlayerPrefs.SetInt("GameScore", gscore);
 					PlayerPrefs.Save();
 				} else if (a == 9){
 					PlayerPrefs.SetInt("gameCount", 1);
@@ -110,13 +110,14 @@ public class ScoreManager : MonoBehaviour {
 
             case eScoreEvent.gameLoss:
                 // If it's a loss, check against the high score
+				gscore += score;
 				int c = PlayerPrefs.GetInt("gameCount");
 				int d = PlayerPrefs.GetInt("GameScore");
 				if (c < 9){
 					c += 1;
 					d += score;
 					PlayerPrefs.SetInt("gameCount", c);
-					PlayerPrefs.SetInt("GameScore", d);
+					PlayerPrefs.SetInt("GameScore", gscore);
 					PlayerPrefs.Save();
 				} else if (c == 9){
 					PlayerPrefs.SetInt("gameCount", 1);
@@ -145,5 +146,6 @@ public class ScoreManager : MonoBehaviour {
 
     static public int CHAIN {  get { return S.chain; } }
     static public int SCORE {  get { return S.score; } }
+    static public int GAME_SCORE {  get { return S.gscore; } }
     static public int SCORE_RUN {  get { return S.scoreRun; } }
 }
